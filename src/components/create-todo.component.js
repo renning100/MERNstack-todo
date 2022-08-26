@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axios from 'axios';
 function CreateTodo() {
   const [todo, setTodo] = useState({
     todo_description: "",
@@ -7,8 +7,16 @@ function CreateTodo() {
     todo_priority: "",
     todo_completed: false,
   });
-  function onSubmit(e) {
+  function updateForm(value){
+    return setTodo((prev)=>{
+      return {...prev,...value};
+    });
+  }
+  async function onSubmit(e) {
     e.preventDefault();
+    const newTodo={...todo};
+    axios.post('http://localhost:4000/todos/add', newTodo)
+    .then(res=>console.log(res.data));
     setTodo({
       todo_description: "",
       todo_responsible: "",
@@ -26,7 +34,7 @@ function CreateTodo() {
             type="text"
             className="form-control"
             value={todo.todo_description}
-            onChange={(e) => setTodo({ todo_description: e.target.value })}
+            onChange={(e) => updateForm({ todo_description: e.target.value })}
           />
         </div>
         <div className="form-group">
@@ -35,7 +43,7 @@ function CreateTodo() {
             type="text"
             className="form-control"
             value={todo.todo_responsible}
-            onChange={(e) => setTodo({ todo_responsible: e.target.value })}
+            onChange={(e) => updateForm({ todo_responsible: e.target.value })}
           />
         </div>
         <div className="form-group">
@@ -47,7 +55,7 @@ function CreateTodo() {
               id="priorityLow"
               value="Low"
               checked={todo.todo_priority === "Low"}
-              onChange={(e) => setTodo({ todo_priority: e.target.value })}
+              onChange={(e) => updateForm({ todo_priority: e.target.value })}
             />
             <label className="form-check-label">Low</label>
           </div>
@@ -59,7 +67,7 @@ function CreateTodo() {
               id="priorityMedium"
               value="Medium"
               checked={todo.todo_priority === "Medium"}
-              onChange={(e) => setTodo({ todo_priority: e.target.value })}
+              onChange={(e) => updateForm({ todo_priority: e.target.value })}
             />
             <label className="form-check-label">Medium</label>
           </div>
@@ -71,7 +79,7 @@ function CreateTodo() {
               id="priorityHigh"
               value="High"
               checked={todo.todo_priority === "High"}
-              onChange={(e) => setTodo({ todo_priority: e.target.value })}
+              onChange={(e) => updateForm({ todo_priority: e.target.value })}
             />
             <label className="form-check-label">High</label>
           </div>
